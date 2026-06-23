@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "siteName": "FutureProofing",
+    "tagline": "Elite software engineers, on demand.",
+    "version": "1.0.0"
+  },
+  "engineers": [
+    {
+      "id": "eng-001",
+      "name": "Ada Whitfield",
+      "role": "Principal Backend Engineer",
+      "bio": "Distributed systems specialist with 12 years building high-throughput payment and ledger infrastructure for fintech scale-ups.",
+      "skills": ["Go", "Rust", "PostgreSQL", "Kafka", "Distributed Systems"],
+      "available": true,
+      "imageUrl": "/images/engineers/ada-whitfield.jpg"
+    },
+    {
+      "id": "eng-002",
+      "name": "Mateo Alvarez",
+      "role": "Staff Frontend Engineer",
+      "bio": "Product-minded frontend engineer focused on performant, accessible interfaces and design systems at consumer scale.",
+      "skills": ["TypeScript", "React", "Next.js", "Accessibility", "Performance"],
+      "available": false,
+      "imageUrl": "/images/engineers/mateo-alvarez.jpg"
+    },
+    {
+      "id": "eng-003",
+      "name": "Priya Nadarajah",
+      "role": "ML Platform Engineer",
+      "bio": "Builds reliable ML training and inference platforms, bridging research prototypes and production-grade infrastructure.",
+      "skills": ["Python", "PyTorch", "Kubernetes", "MLOps", "AWS"],
+      "available": true,
+      "imageUrl": "/images/engineers/priya-nadarajah.jpg"
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-001",
+      "title": "Embedded Engineering Teams",
+      "description": "Senior engineers who integrate directly into your workflow, ship from day one, and operate as full members of your team.",
+      "icon": "users"
+    },
+    {
+      "id": "svc-002",
+      "title": "Technical Due Diligence",
+      "description": "Independent architecture, code quality, and scalability assessments for investors and acquirers.",
+      "icon": "search-check"
+    },
+    {
+      "id": "svc-003",
+      "title": "Greenfield Product Builds",
+      "description": "End-to-end delivery of new products, from architecture and prototyping through launch and handover.",
+      "icon": "rocket"
+    }
+  ],
+  "caseStudies": [
+    {
+      "id": "cs-001",
+      "title": "Scaling a Payments Ledger to 50k TPS",
+      "client": "NorthPay",
+      "summary": "Re-architected a monolithic ledger into an event-sourced system, achieving a 10x throughput increase with zero downtime migration.",
+      "tags": ["fintech", "distributed-systems", "performance"],
+      "year": 2024
+    },
+    {
+      "id": "cs-002",
+      "title": "Rebuilding a Consumer App Frontend",
+      "client": "Lumen Health",
+      "summary": "Delivered a new React design system and accessibility overhaul, cutting load times by 60% and reaching WCAG AA compliance.",
+      "tags": ["frontend", "design-systems", "accessibility"],
+      "year": 2023
+    },
+    {
+      "id": "cs-003",
+      "title": "Productionizing an ML Recommendation Engine",
+      "client": "Cratebox",
+      "summary": "Took a research notebook to a scalable, monitored inference platform serving millions of daily recommendations.",
+      "tags": ["machine-learning", "mlops", "infrastructure"],
+      "year": 2025
+    }
+  ],
+  "faqs": [
+    {
+      "id": "faq-001",
+      "question": "How quickly can an engineer start?",
+      "answer": "Most engagements begin within one to two weeks of an initial scoping call, depending on availability and requirements."
+    },
+    {
+      "id": "faq-002",
+      "question": "Do engineers work in our time zone?",
+      "answer": "We match engineers to your working hours wherever possible and guarantee a meaningful daily overlap for collaboration."
+    },
+    {
+      "id": "faq-003",
+      "question": "What happens if an engineer is not the right fit?",
+      "answer": "We offer a no-questions-asked replacement within the first two weeks of any engagement to ensure the right match."
+    }
+  ]
+}
