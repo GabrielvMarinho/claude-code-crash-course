@@ -100,8 +100,16 @@ export default function App() {
             (n, tool) => n + (checkedTools.has(`${cat.category}::${tool.name}`) ? 1 : 0),
             0
           );
-          const percent = cat.tools.length
-            ? Math.round((checkedCount / cat.tools.length) * 100)
+          const exampleStepCount = cat.example?.steps.length ?? 0;
+          const checkedExampleStepCount = cat.example
+            ? cat.example.steps.reduce(
+                (n, _, si) => n + (checkedTools.has(`${cat.category}::example::${si}`) ? 1 : 0),
+                0
+              )
+            : 0;
+          const totalCount = cat.tools.length + exampleStepCount;
+          const percent = totalCount
+            ? Math.round(((checkedCount + checkedExampleStepCount) / totalCount) * 100)
             : 0;
           const isFinished = percent === 100;
           return (
@@ -158,7 +166,12 @@ export default function App() {
 
               {activeCategory?.example && (
                 <div className="example">
-                  <h3 className="example-title">{activeCategory.example.title}</h3>
+                  <div className="example-heading">
+                    <h3 className="example-title">{activeCategory.example.title}</h3>
+                    <span className="example-flag" title="Run Claude with this flag to watch each tool call as it happens">
+                      claude --verbose
+                    </span>
+                  </div>
                   {activeCategory.example.note && (
                     <p className="example-note">{activeCategory.example.note}</p>
                   )}

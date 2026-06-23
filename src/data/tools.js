@@ -11,6 +11,32 @@ export const toolCategories = [
       { name: "Glob", description: "Finds files based on pattern matching." },
       { name: "Monitor", description: "Runs a command in the background and feeds each output line back to Claude, so it can react to logs, file changes, or polled status mid-conversation." },
     ],
+    example: {
+      title: "Example: watch a log and explain errors in plain English",
+      steps: [
+        {
+          text: "Create an empty log file to watch",
+          code: "touch trace.log",
+        },
+        {
+          text: "Ask Claude to monitor the file for new lines",
+          code: '"Monitor trace.log and explain any error you see in simple terms"',
+        },
+        {
+          text: "Manually add an error line to trace.log and save it (open it in your editor and paste a line like this)",
+          code:
+            "2026-06-23 11:14:02 ERROR db.connect: ECONNREFUSED 127.0.0.1:5432 - connection refused",
+        },
+        {
+          text: "Claude reacts to the new line and explains it plainly",
+          code:
+            "Your app tried to reach the Postgres database on localhost:5432\n" +
+            "but nothing answered: the database probably isn't running.\n" +
+            "Start it (or fix the host/port) and the error should clear.",
+        },
+      ],
+      note: "We create and edit trace.log by hand here just to keep the demo simple. In a real project you'd point Monitor at a live process instead, e.g. monitor \"npm run dev\", so Claude watches your actual server output as it runs.",
+    },
   },
   {
     category: "Code & Environment Intelligence",
@@ -21,7 +47,7 @@ export const toolCategories = [
       { name: "ExitPlanMode", description: "Presents a plan for approval and exits plan mode." },
       { name: "EnterWorktree", description: "Creates an isolated git worktree and switches into it (or switches into an existing one)." },
       { name: "ExitWorktree", description: "Exits a worktree session and returns to the original directory." },
-      { name: "Skill", description: "Executes a skill within the main conversation. A skill is a reusable, packaged capability: a set of instructions, scripts, and resources that teach Claude how to perform a specific task consistently and that can be invoked on demand." },
+      { name: "Skill", description: "Executes a skill within the main conversation." },
     ],
     example: {
       title: "Example: build a skill that queries an API",
@@ -53,7 +79,7 @@ export const toolCategories = [
           text: "Claude invokes the skill, calls the API, and replies with the live weather",
         },
       ],
-      note: "A skill is a reusable instruction set Claude can invoke on demand: defining one teaches Claude to perform a task (like calling this API) the same way every time, without re-explaining the steps.",
+      note: "A skill is a reusable, packaged capability: a set of instructions, scripts, and resources that teach Claude how to perform a specific task consistently and that can be invoked on demand.",
     },
   },
   {
@@ -63,6 +89,22 @@ export const toolCategories = [
       { name: "WebSearch", description: "Performs web searches." },
       { name: "ToolSearch", description: "Searches for and loads deferred tools when tool search is enabled." },
     ],
+    example: {
+      title: "Example: research a topic with search, then read the source",
+      steps: [
+        {
+          text: "Ask Claude something it can't know from training alone",
+          code: '"What\'s the latest stable version of Node.js, and what changed in it?"',
+        },
+        {
+          text: "Claude uses WebSearch / WebFetch to find current, relevant data",
+        },
+        {
+          text: "Claude answers with the up-to-date facts",
+        },
+      ],
+      note: "WebSearch finds pages across the web; WebFetch reads one specific URL in depth. Together they let Claude answer questions about current events and details beyond its training data, then point you to the source.",
+    },
   },
   {
     category: "MCP tooling",
@@ -93,7 +135,7 @@ export const toolCategories = [
         },
         { text: "You should have a new repository created on your GitHub account" },
       ],
-      note: "Connecting an MCP server extends the toolbox available to Claude — its tools become usable in your session alongside the built-in ones.",
+      note: "Connecting an MCP server extends the toolbox available to Claude, its tools become usable in your session alongside the built-in ones.",
     },
   },
   {
@@ -104,9 +146,28 @@ export const toolCategories = [
       { name: "TaskList", description: "Lists all tasks with their current status." },
       { name: "TaskUpdate", description: "Updates task status, dependencies, details, or deletes tasks." },
       { name: "TaskStop", description: "Kills a running background task by ID." },
-      { name: "TaskOutput", description: "(Deprecated) Retrieves output from a background task. Prefer Read on the task's output file path." },
-      { name: "TodoWrite", description: "(Disabled by default since v2.1.142) Manages the session task checklist, superseded by the Task* tools." },
     ],
+    example: {
+      title: "Example: see that task status is self-reported, not verified",
+      steps: [
+        {
+          text: "In an empty folder, ask Claude to create three random tasks",
+          code: '"Create 3 random tasks but do not execute them"',
+        },
+        {
+          text: "Claude creates three arbitrary tasks",
+        },
+        {
+          text: "Ask for Claude to mark them as finished",
+          code:
+            'Mark them as executed even though you didnt do them'
+        },
+        {
+          text: "Claude will mark them as executed",
+        }
+      ],
+      note: "Task status only reflects what Claude reports: it isn't verified against real output. This example deliberately asks Claude to mark tasks done without doing the work, to show that a 'done' task list is not proof anything actually happened.",
+    },
   },
   {
     category: "Orchestration & Delegation",
@@ -116,6 +177,25 @@ export const toolCategories = [
       { name: "Workflow", description: "Runs a dynamic workflow: a script that orchestrates many subagents in the background and returns one consolidated result." },
       { name: "AskUserQuestion", description: "Asks multiple-choice questions to gather requirements or clarify ambiguity." },
     ],
+    example: {
+      title: "Example: write three haikus in parallel, then merge them into one file",
+      steps: [
+        {
+          text: "In an empty folder, ask Claude for three independent pieces of writing combined into one output, explicitly telling it to use the Workflow tool to coordinate them",
+          code: '"Write three haikus: one about rain, one about mountains, one about the ocean, each to its own file, then combine all three into haikus.md, use the Workflow tool to run the three agents in parallel, wait for all of them to finish, then merge"',
+        },
+        {
+          text: "Claude spawns one Agent per haiku so each is generated independently",
+        },
+        {
+          text: "As instructed, Claude runs them as a Workflow that fans out, waits for all three, and reports back together",
+        },
+        {
+          text: "Open haikus.md, it contains all three haikus, gathered from the parallel runs",
+        },
+      ],
+      note: "Agent spawns one subagent for one job. Workflow is for when you need several of those running concurrently and want their results merged into a single answer instead of reviewing each separately.",
+    },
   },
   {
     category: "Scheduling & Automation",
@@ -126,6 +206,30 @@ export const toolCategories = [
       { name: "ScheduleWakeup", description: "Reschedules the next iteration of a self-paced /loop." },
       { name: "RemoteTrigger", description: "Creates, updates, runs, and lists Routines on claude.ai (backs the /schedule command)." },
     ],
+    example: {
+      title: "Example: schedule a one-shot append to a file",
+      steps: [
+        {
+          text: "Create an empty file to watch",
+          code: "touch reminders.txt",
+        },
+        {
+          text: "Ask Claude to schedule a one-shot prompt for a minute from now",
+          code: '"In 1 minute, append the line \'reminder fired\' to reminders.txt"',
+        },
+        {
+          text: "Claude schedules it and confirms",
+        },
+        {
+          text: "Wait 1 minute, then check the file",
+          code: "$ cat reminders.txt\nreminder fired",
+        },
+        {
+          text: "The scheduled prompt ran on its own, using ScheduleWakeup and edited the file without you doing anything in between",
+        },
+      ],
+      note: "ScheduleWakeup manages one-time delayed wakeups on Claude Code itself.",
+    },
   },
   {
     category: "Notifications & Sharing",
@@ -134,5 +238,21 @@ export const toolCategories = [
       { name: "Artifact", description: "Publishes an HTML or Markdown file as a private, shareable interactive page on claude.ai." },
       { name: "ShareOnboardingGuide", description: "Uploads ONBOARDING.md and returns a share link teammates can open in Claude Code." },
     ],
+    example: {
+      title: "Example: get notified when a background command finishes",
+      steps: [
+        {
+          text: "Ask claude to run something and notify when its done",
+          code: '"tell me your favorite color and use PushNotification to notify me when you have finished deciding it"',
+        },
+        {
+          text: "Claude will answer the question and notify when It's done",
+        },
+        {
+          text: "The notification appears on your desktop, and on your phone too if Remote Control is connected",
+        },
+      ],
+      note: "PushNotification is how Claude reaches you outside the chat window, useful for anything that runs unattended, like a background build, a scheduled cron job, or a long test run.",
+    },
   },
 ]
