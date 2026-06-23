@@ -84,12 +84,13 @@ export default function App() {
 
   return (
     <div className="page">
-      <p className="eyebrow">I — Tooling</p>
+      <p className="eyebrow">Module I — Tooling</p>
       <h1 className="hero-title">
         Claude Code, <em className="hero-em">in pieces.</em>
       </h1>
       <p className="hero-lead">
-        Every LLM tool available in Claude Code (the ones your agent will use)
+        Each tile below is a learning module: the tools your agent has access to in that
+        area, and a worked example of what it actually builds with them.
       </p>
 
       <hr className="rule" />
@@ -142,6 +143,7 @@ export default function App() {
               </button>
               <p className="overlay-eyebrow">{String(view.index + 1).padStart(2, '0')}</p>
               <h2 className="overlay-title">{activeCategory?.category}</h2>
+              <p className="kicker">What it has access to</p>
               <div className="tool-list">
                 {activeCategory?.tools.map((tool) => {
                   const key = `${activeCategory.category}::${tool.name}`;
@@ -166,6 +168,7 @@ export default function App() {
 
               {activeCategory?.example && (
                 <div className="example">
+                  <p className="kicker">What it actually builds</p>
                   <div className="example-heading">
                     <h3 className="example-title">{activeCategory.example.title}</h3>
                     <span className="example-flag" title="Run Claude with this flag to watch each tool call as it happens">
