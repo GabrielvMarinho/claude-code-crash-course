@@ -1,0 +1,413 @@
+:root {
+  /* color */
+  --color-bg: #FAFAF8;
+  --color-bg-alt: #FFFFFF;
+  --color-ink: #0A0A0A;
+  --color-ink-soft: #3A3A3A;
+  --color-muted: #737373;
+  --color-line: #E5E5E0;
+  --color-line-strong: #0A0A0A;
+  --color-accent: #635FFF;
+  --color-accent-ink: #FFFFFF;
+
+  /* type */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, monospace;
+  --font-instrument: "Instrument Serif", Georgia, serif;
+
+  /* spacing (8px base) */
+  --space-1: 0.5rem; --space-2: 1rem; --space-3: 1.5rem; --space-4: 2rem;
+  --space-5: 3rem;   --space-6: 4rem; --space-7: 6rem;   --space-8: 8rem;
+
+  /* shape */
+  --radius: 0px;
+  --border: 1px solid var(--color-line);
+  --container: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.page {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: var(--space-6) var(--space-5);
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.eyebrow::before {
+  content: "§ ";
+}
+
+.hero-title {
+  font-family: var(--font-sans);
+  font-size: clamp(40px, 6.8vw, 84px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.hero-em {
+  font-family: var(--font-instrument);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+.hero-lead {
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--color-ink-soft);
+  max-width: 65ch;
+  margin: 0;
+}
+
+.rule {
+  border: none;
+  border-top: 1px solid var(--color-line);
+  margin: var(--space-6) 0 var(--space-5) 0;
+}
+
+.node-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.node {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--color-bg-alt);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.node:hover,
+.node:focus-visible {
+  border-color: #635FFF;
+  outline: none;
+}
+
+.node--finished {
+  opacity: 0.5;
+}
+
+.node--finished:hover,
+.node--finished:focus-visible {
+  opacity: 1;
+}
+
+.node-index {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.node-title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-2) 0;
+}
+
+.node-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.node-arrow {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.node-percent {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-accent);
+}
+
+/* --- Overlay: the "inside the node" view --- */
+
+.overlay {
+  position: fixed;
+  z-index: 50;
+  overflow: hidden;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-line);
+  transition: top 420ms cubic-bezier(0.65, 0, 0.35, 1),
+              left 420ms cubic-bezier(0.65, 0, 0.35, 1),
+              width 420ms cubic-bezier(0.65, 0, 0.35, 1),
+              height 420ms cubic-bezier(0.65, 0, 0.35, 1),
+              background-color 420ms ease,
+              border-color 420ms ease,
+              box-shadow 420ms ease;
+}
+
+.overlay--open {
+  background: var(--color-bg-alt);
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 1px var(--color-ink), 0 24px 64px rgba(10, 10, 10, 0.18);
+}
+
+.overlay-content {
+  height: 100%;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  padding: var(--space-3);
+}
+
+.overlay--open .overlay-content {
+  opacity: 1;
+  transition: opacity 200ms ease 220ms;
+}
+
+@media (min-width: 768px) {
+  .overlay-content {
+    padding: var(--space-6) var(--space-5);
+  }
+}
+
+.overlay-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.overlay-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  background: none;
+  border: none;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: var(--space-5);
+}
+
+.overlay-back:hover {
+  text-decoration: underline;
+}
+
+.overlay-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.overlay-eyebrow::before {
+  content: "§ ";
+}
+
+.overlay-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0 0 var(--space-5) 0;
+}
+
+.tool-list {
+  border-top: 1px solid var(--color-line);
+}
+
+.tool-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-line);
+  cursor: pointer;
+}
+
+.tool-row--checked .tool-name,
+.tool-row--checked .tool-description {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+@media (min-width: 768px) {
+  .tool-row {
+    grid-template-columns: auto 240px 1fr;
+    gap: var(--space-4);
+  }
+}
+
+.tool-checkbox {
+  grid-row: 1 / -1;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.2rem 0 0 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.tool-name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.tool-description {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+  margin: 0;
+}
+
+
+/* --- Example checklist (within a category overlay) --- */
+
+.example {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line-strong);
+}
+
+.example-title {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.example-note {
+  margin: 0 0 var(--space-3) 0;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-bg);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+
+.example-steps {
+  list-style: none;
+  counter-reset: example;
+  margin: 0;
+  padding: 0;
+}
+
+.example-step {
+  counter-increment: example;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.example-step:last-child {
+  border-bottom: none;
+}
+
+.example-step-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.example-step-text {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.example-step-text::before {
+  content: counter(example) ". ";
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.example-step-row--checked .example-step-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.example-link {
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.example-code {
+  margin: var(--space-2) 0 0 calc(1.125rem + var(--space-2));
+  padding: var(--space-2);
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+}
+
+.example-step-row--checked + .example-code {
+  opacity: 0.5;
+}

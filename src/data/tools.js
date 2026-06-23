@@ -21,8 +21,40 @@ export const toolCategories = [
       { name: "ExitPlanMode", description: "Presents a plan for approval and exits plan mode." },
       { name: "EnterWorktree", description: "Creates an isolated git worktree and switches into it (or switches into an existing one)." },
       { name: "ExitWorktree", description: "Exits a worktree session and returns to the original directory." },
-      { name: "Skill", description: "Executes a skill within the main conversation." },
+      { name: "Skill", description: "Executes a skill within the main conversation. A skill is a reusable, packaged capability: a set of instructions, scripts, and resources that teach Claude how to perform a specific task consistently and that can be invoked on demand." },
     ],
+    example: {
+      title: "Example: build a skill that queries an API",
+      steps: [
+        {
+          text: "Create a folder for the skill in your project",
+          code: "mkdir -p .claude/skills/weather-lookup",
+        },
+        {
+          text: "Add a SKILL.md describing what it does and how to query the API",
+          code:
+            "---\n" +
+            "name: weather-lookup\n" +
+            "description: Look up the current weather for a city using the Open-Meteo API. Use when the user asks about weather conditions.\n" +
+            "---\n\n" +
+            "# Weather Lookup\n\n" +
+            "When the user asks about the weather for a city:\n\n" +
+            "1. Geocode the city:\n" +
+            '   curl "https://geocoding-api.open-meteo.com/v1/search?name=CITY&count=1"\n' +
+            "2. Use the returned latitude/longitude to fetch current conditions:\n" +
+            '   curl "https://api.open-meteo.com/v1/forecast?latitude=LAT&longitude=LON&current=temperature_2m,weather_code"\n' +
+            "3. Report the temperature and conditions back to the user.",
+        },
+        {
+          text: "On Claude code, Ask for it to use the skill",
+          code: '"Use the weather-lookup skill to tell me the weather in Tokyo"',
+        },
+        {
+          text: "Claude invokes the skill, calls the API, and replies with the live weather",
+        },
+      ],
+      note: "A skill is a reusable instruction set Claude can invoke on demand: defining one teaches Claude to perform a task (like calling this API) the same way every time, without re-explaining the steps.",
+    },
   },
   {
     category: "External Information Retrieval",
@@ -39,6 +71,30 @@ export const toolCategories = [
       { name: "ReadMcpResourceTool", description: "Reads a specific MCP resource by URI." },
       { name: "WaitForMcpServers", description: "Waits for MCP servers still connecting in the background so a request can use their tools without restarting the session." },
     ],
+    example: {
+      title: "Example: connect the GitHub MCP server",
+      steps: [
+        {
+          text: "Create a fine-grained personal access token",
+          link: "https://github.com/settings/personal-access-tokens/new",
+        },
+        { text: 'Grant the permission "administration: read and write"' },
+        {
+          text: "Add the GitHub MCP server",
+          code: 'claude mcp add --transport http github https://api.githubcopilot.com/mcp --header "Authorization: Bearer YOUR_TOKEN"',
+        },
+        {
+          text: "Verify the connection is live",
+          code: "$ claude mcp list\ngithub: https://api.githubcopilot.com/mcp (HTTP) - ✔ Connected",
+        },
+        {
+          text: "On Claude code, ask for it to use it",
+          code: '"Create a test repository on github"',
+        },
+        { text: "You should have a new repository created on your GitHub account" },
+      ],
+      note: "Connecting an MCP server extends the toolbox available to Claude — its tools become usable in your session alongside the built-in ones.",
+    },
   },
   {
     category: "Task Management (within session)",
