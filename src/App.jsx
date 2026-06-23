@@ -92,6 +92,9 @@ export default function App() {
         Each tile below is a learning module: the tools your agent has access to in that
         area, and a worked example of what it actually builds with them.
       </p>
+      <p className="hero-lead">
+        Understanding what your agent can do at a low level will help you leverage high-level strategies later on.
+      </p>
 
       <hr className="rule" />
 

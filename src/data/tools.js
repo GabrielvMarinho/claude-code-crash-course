@@ -20,7 +20,7 @@ export const toolCategories = [
         },
         {
           text: "Ask Claude to monitor the file for new lines",
-          code: '"Monitor trace.log and explain any error you see in simple terms"',
+          code: '"Use the Monitor tool to analyze trace.log continuously and explain any error you see in simple terms"',
         },
         {
           text: "Manually add an error line to trace.log and save it (open it in your editor and paste a line like this)",
